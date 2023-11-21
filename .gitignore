@@ -56,3 +56,5 @@ _testmain.go
 
 # air
 /tmp
+
+.env

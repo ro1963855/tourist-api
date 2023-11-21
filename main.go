@@ -1,16 +1,22 @@
 package main
 
 import (
-  "net/http"
-  "github.com/gin-gonic/gin"
+	"tourist-api/apis"
+	database "tourist-api/db"
+	"tourist-api/utils"
 )
 
+func initialDB() {
+	POSTGRES_HOST := utils.ENV_POSTGRES_HOST
+	POSTGRES_DB := utils.ENV_POSTGRES_DB
+	POSTGRES_USER := utils.ENV_POSTGRES_USER
+	POSTGRES_PASSWORD := utils.ENV_POSTGRES_PASSWORD
+	POSTGRES_PORT := utils.ENV_POSTGRES_PORT
+
+	database.InitDB(POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT)
+}
+
 func main() {
-  r := gin.Default()
-  r.GET("/ping", func(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{
-      "message": "pong",
-    })
-  })
-  r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	initialDB()
+	apis.InitAPI()
 }
