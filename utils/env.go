@@ -14,6 +14,8 @@ var ENV_POSTGRES_PORT string
 var ENV_FRONTEND_DOMAIN string
 var ENV_API_PORT string
 
+var GLOBAL_TOKEN_NAMING = "api-token"
+
 func init() {
 	ENV_POSTGRES_HOST = os.Getenv("POSTGRES_HOST")
 	ENV_POSTGRES_DB = os.Getenv("POSTGRES_DB")

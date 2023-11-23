@@ -22,19 +22,3 @@ func InitDB(POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGR
 		log.Fatal(err)
 	}
 }
-
-type User struct {
-	ID        uint   `gorm:"primaryKey"`
-	Email     string `gorm:"column:email"`
-	Password  string `gorm:"password:email"`
-	UpdatedAt string `gorm:"column:updated_at;autoUpdateTime"`
-	CreatedAt string `gorm:"column:created_at;autoCreateTime"`
-}
-
-func AuthenticateUser(email string) (User, error) {
-	var user User
-	if err := DB.Where("email = ?", email).First(&user).Error; err != nil {
-		return user, err
-	}
-	return user, nil
-}
