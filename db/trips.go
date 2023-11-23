@@ -16,3 +16,10 @@ func CreateTrip(userID uint, tripName string) (*Trip, error) {
 	result := DB.Create(&newTrip)
 	return newTrip, result.Error
 }
+
+func GetTrips(userID uint) ([]Trip, error) {
+	var trips []Trip
+
+	result := DB.Where("user_id = ?", userID).Find(&trips)
+	return trips, result.Error
+}

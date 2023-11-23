@@ -42,5 +42,6 @@ func CORSMiddleware() gin.HandlerFunc {
 func apiList(router *gin.Engine) {
 	router.POST("/api/v1/login", login)
 
+	router.GET("/api/v1/trips", getTrips)
 	router.POST("/api/v1/trips", createTrip)
 }
