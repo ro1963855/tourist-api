@@ -10,12 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func createSchedule(c *gin.Context) {
-	var createSchedulePayload struct {
-		ScheduleName string `json:"scheduleName" binding:"required"`
+func createTrip(c *gin.Context) {
+	var createTripPayload struct {
+		TripName string `json:"tripName" binding:"required"`
 	}
 
-	if err := c.BindJSON(&createSchedulePayload); err != nil {
+	if err := c.BindJSON(&createTripPayload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
@@ -27,15 +27,15 @@ func createSchedule(c *gin.Context) {
 		return
 	}
 
-	newUserSchedule, err := database.CreateSchedule(uint(userIDAsUint), createSchedulePayload.ScheduleName)
+	newTrip, err := database.CreateTrip(uint(userIDAsUint), createTripPayload.TripName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server side error: 0002"})
 		return
 	}
 
-	type CreateScheduleResponse struct {
-		ScheduleID uint
+	type CreateTripResponse struct {
+		TripID uint
 	}
 
-	c.JSON(http.StatusOK, CreateScheduleResponse{ScheduleID: newUserSchedule.ID})
+	c.JSON(http.StatusOK, CreateTripResponse{TripID: newTrip.ID})
 }

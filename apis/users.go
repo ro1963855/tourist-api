@@ -33,9 +33,13 @@ func login(c *gin.Context) {
 		return
 	}
 
+	type LoginResponse struct {
+		Success bool
+	}
+
 	hostname := parsedURL.Hostname()
 	id := strconv.FormatInt(int64(user.ID), 10)
 	c.SetSameSite(http.SameSiteStrictMode)
 	c.SetCookie(utils.GLOBAL_TOKEN_NAMING, id, 2147483647, "/", hostname, true, true)
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, LoginResponse{Success: true})
 }
