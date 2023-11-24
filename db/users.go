@@ -12,7 +12,7 @@ type User struct {
 
 func AuthenticateUser(email string) (User, error) {
 	var user User
-	if err := DB.Where("email = ?", email).First(&user).Error; err != nil {
+	if err := DB.Where("email = ?", email).Take(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil

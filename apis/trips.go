@@ -83,3 +83,31 @@ func getTrips(c *gin.Context) {
 
 	c.JSON(http.StatusOK, responseTrips)
 }
+
+func getTripDetail(c *gin.Context) {
+	userID, err := c.Cookie(utils.GLOBAL_TOKEN_NAMING)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "token not found"})
+		return
+	}
+
+	userIDAsUint, err := utils.StringToUnit(userID)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized failed"})
+		return
+	}
+
+	tripID, err := utils.StringToUnit(c.Param("tripID"))
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "invalid tripID format"})
+		return
+	}
+
+	tripDetail, err := database.GetTripDetail(userIDAsUint, tripID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "trip detail not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, tripDetail)
+}
