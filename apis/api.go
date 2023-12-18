@@ -46,4 +46,7 @@ func apiList(router *gin.Engine) {
 	router.POST("/api/v1/trips", createTrip)
 
 	router.GET("/api/v1/trips/:tripID", getTripDetail)
+
+	router.POST("/api/v1/trips/:tripID/locations", bindLocationToTrip)
+	router.DELETE("/api/v1/trips/:tripID/locations/:locationID", unbindLocationToTrip)
 }

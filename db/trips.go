@@ -6,15 +6,25 @@ import (
 )
 
 type Trip struct {
-	ID        uint      `gorm:"primaryKey"`
-	TripName  string    `gorm:"column:trip_name"`
-	UserID    uint      `gorm:"foreignKey:ID"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
+	ID        uint       `gorm:"primaryKey"`
+	TripName  string     `gorm:"column:trip_name"`
+	UserID    uint       `gorm:"foreignKey:ID"`
+	Locations []Location `gorm:"many2many:trips_locations"`
+	UpdatedAt time.Time  `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt time.Time  `gorm:"column:created_at;autoCreateTime"`
+}
+
+type TripsLocations struct {
+	ID         uint      `gorm:"primaryKey"`
+	TripID     uint      `gorm:"primaryKey"`
+	LocationID uint      `gorm:"primaryKey"`
+	UpdatedAt  time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt  time.Time `gorm:"column:created_at;autoCreateTime"`
 }
 
 type TripDetailFlatten struct {
 	ID            uint    `json:"ID"`
+	PlaceID       string  `json:"PlaceID"`
 	TripName      string  `json:"TripName"`
 	LocationID    uint    `json:"LocationID"`
 	LocationName  string  `json:"LocationName"`
@@ -36,6 +46,7 @@ type TripDetail struct {
 
 type TripDetailLocation struct {
 	ID            uint                    `json:"LocationID"`
+	PlaceID       string                  `json:"PlaceID"`
 	LocationName  string                  `json:"LocationName"`
 	Longitude     float64                 `json:"Longitude"`
 	Latitude      float64                 `json:"Latitude"`
@@ -65,6 +76,12 @@ func GetTrips(userID uint) ([]Trip, error) {
 	return trips, result.Error
 }
 
+func GetUserTrip(userID uint, tripID uint) Trip {
+	var trip Trip
+	DB.Where("user_id = ? AND id = ?", userID, tripID).Find(&trip)
+	return trip
+}
+
 // FIXME: 想要直接拿到不是 Flatten 的結果，但中間表的 locations_tags.color 找不到方式可以抓取到值
 func GetTripDetail(userID uint, tripID uint) (TripDetail, error) {
 	var tripDetailFlatten []TripDetailFlatten
@@ -73,6 +90,7 @@ func GetTripDetail(userID uint, tripID uint) (TripDetail, error) {
 			trips.id,
 			trips.trip_name,
 			locations.id as location_id,
+			locations.place_id,
 			locations.location_name,
 			locations.longitude,
 			locations.latitude,
@@ -114,6 +132,7 @@ func tripDetailFlattenToTripDetail(tripDetailFlatten []TripDetailFlatten) (TripD
 		if _, ok := locationMap[row.LocationID]; !ok && row.LocationID != 0 {
 			locationMap[row.LocationID] = &TripDetailLocation{
 				ID:            row.LocationID,
+				PlaceID:       row.PlaceID,
 				LocationName:  row.LocationName,
 				Longitude:     row.Longitude,
 				Latitude:      row.Latitude,

@@ -28,7 +28,7 @@ func createTrip(c *gin.Context) {
 
 	userIDAsUint, err := utils.StringToUnit(userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized failed"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authorized failed"})
 		return
 	}
 
@@ -54,7 +54,7 @@ func getTrips(c *gin.Context) {
 
 	userIDAsUint, err := utils.StringToUnit(userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized failed"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authorized failed"})
 		return
 	}
 
@@ -93,7 +93,7 @@ func getTripDetail(c *gin.Context) {
 
 	userIDAsUint, err := utils.StringToUnit(userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized failed"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authorized failed"})
 		return
 	}
 
